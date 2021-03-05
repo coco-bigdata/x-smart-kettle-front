@@ -477,7 +477,7 @@ TODO
     2、后续考虑增加用户权限、角色权限设计
     3、后续考虑增加线程池高级配置，支持多线程任务的灵活配置
     4、后续研究Vue前端实现集成Kettle组件，实现Web端的Kettle任务流程编排
-    - 部署运维方面
+   - 部署运维方面
     1、考虑做到应用+服务+数据库一体化，jar包集成
     2、考虑通过Docker容器方式实现功能移植
     3、考虑通过Jenkins实现打包、部署
@@ -522,3 +522,4 @@ No matter how much the donation amount is enough to express your thought, thank 
         佛祖保佑捐赠这些人写程序永无bug，工资翻倍，迎娶白富美，走上人生巅峰！
 
 ![支付宝](https://gitee.com/yaukie/x-smart-kettle-server/raw/master/folder/wechat.jpg)
+       
