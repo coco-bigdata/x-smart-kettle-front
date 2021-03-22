@@ -123,12 +123,12 @@ export default {
   '定时正则': {
 
     url: '/xtl/help/cron',
-    frameUrl:'/cron/index.htm',
+    frameUrl:config.baseUrl.pro+'/cron/index.htm',
     component: IframeView
   },
   '在线JSON': {
     url: '/xtl/help/json',
-    frameUrl:'/json/index.htm',
+    frameUrl:config.baseUrl.pro+'/json/index.htm',
     component: IframeView
   },
   '告警监控': {

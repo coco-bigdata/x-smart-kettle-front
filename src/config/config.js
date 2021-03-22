@@ -15,7 +15,7 @@ let config = {
 
   baseUrl: {
     dev: 'http://localhost:8080/kettle-admin/',
-    pro: 'http://localhost:8009/'
+    pro: 'http://localhost/kettle-admin/'
   },
 
   TOKEN_KEY: "token",
