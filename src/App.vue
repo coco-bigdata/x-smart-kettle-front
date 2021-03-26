@@ -9,6 +9,7 @@
     mapState,
     mapMutations
   } from 'vuex';
+  // import { removeWatermark, setWaterMark } from '@/components/watermark'
   import axios from '@/libs/api.request'
 export default {
   name: 'App',
@@ -24,6 +25,12 @@ export default {
   },
   computed: {
     ...mapState(['openFlag']),
+  },
+  mounted () {
+    // setWaterMark('yuenbin', 'https://my.oschina.net/yaukie');
+  },
+  destroyed() {
+    // removeWatermark();
   },
   created() {
      if (process.env.VUE_APP_ISOPENSOURCE=='true') {
