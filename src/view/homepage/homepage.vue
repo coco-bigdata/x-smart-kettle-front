@@ -36,9 +36,12 @@
     <i-col  span="4"><span style="font-size: 20px;font-weight: bold;color: #0a110c">实例详情</span> </i-col>
   </Row>
     <Row :gutter="20" style="margin-top: 10px;">
-         <Card shadow>
+      <i-col span="24">
+        <Card shadow>
           <chart-bar style="height: 300px;" :jobSeriesData="jobSeriesData" :transSeriesData="transSeriesData"   text="任务实例总体情况"/>
         </Card>
+      </i-col>
+
      </Row>
     <br/>
 

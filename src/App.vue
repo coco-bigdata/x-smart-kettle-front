@@ -67,7 +67,7 @@ export default {
                   this.$Modal.remove();
                   this.$Message.info('Asynchronously close the dialog box');
                 }, 2000);
-                window.location.href = "http://www.baidu.com"
+                window.location.href = "https://gitee.com/yaukie/x-smart-kettle-front"
               }
             });
 
