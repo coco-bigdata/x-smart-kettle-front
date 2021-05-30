@@ -1,84 +1,70 @@
-import store from '@/store'
-import cacherules from "../config/cacheconf";
-import router from '@/router';
-import util from "@/libs/util";
-
+ import store from '@/store'
+import { Notification, MessageBox, Message } from 'element-ui'
+import { getToken ,ERROR_CODE} from '@/libs/platformUtil'
 var qs = require('qs');
-var timer1, timer2;
 
 function requestInterceptors(config) {
-  let token = sessionStorage.getItem("token");
-  if (token) {
-    config.headers['Authorization']='Bearer'+token;
-    config.headers.token = token;
+  let token = getToken();
+  const isToken = (config.headers || {}).isToken === false ;
+  //给所有请求添加 携带token 请求
+  if(token && !isToken){
+    config.headers['Authorization']='Bearer ' + token ;
   }
+
   if (config.method === 'post') {
     let payload = config.data.payload;
     config.data = config.data.data;
-    if(!payload){
+    if(!payload) {
       config.headers['Content-Type'] = "application/json"
-      config.data = JSON.stringify(config.data);
+      // config.data = qs.stringify(config.data);
     }
   } else if (config.method === 'get') {
-    for (let rule of cacherules) {
-      if (rule.test(config.url)) {
-        return config;
-      }
-    }
     if (config.url.indexOf('?') === -1) {
-      config.url = config.url + "?t=" + new Date().getTime();
+      config.url = config.url + "?&t=" + new Date().getTime();
     } else {
       config.url = config.url + "&t=" + new Date().getTime();
     }
   }
-  //启动调用链跟踪
-  if (window.tracing || sessionStorage.getItem("tracing")) {
-    if (config.url.indexOf('?') === -1) {
-      config.url = config.url + "?debug=true";
-    } else {
-      config.url = config.url + "&debug=true";
-    }
-    if(sessionStorage.getItem("tracingId")){
-      config.url = config.url+"&tracingId="+sessionStorage.tracingId;
-    }
-    sessionStorage.setItem("tracing","true");
-    setTimeout(function () {
-      window.tracing = false;
-      sessionStorage.removeItem("tracing");
-      console.log("调用链跟踪已关闭")
-    }, 20000)
-  }
   return config;
-}
+ }
 
 function requestError(error) {
-  console.error("服务器内部异常,请稍候再试");
   return Promise.reject(error);
 }
 
-function responseInterceptors(response) {
-  var data = response.data;
-  if (data instanceof Object) {
-    var code = data["code"];
-    if (code == "10106") {
-      clearTimeout(timer1);
-      timer1 = setTimeout(function () {
-        if (confirm("会话已失效，是否重新登录")) {
-          util.clearCache()
-          store.dispatch("clearStore")
-          router.push({name: "登录页"});
-        }
-      }, 500)
-    }
+function responseInterceptors(res) {
+  // 未设置状态码则默认成功状态
+  const code = res.data.code || 200 || 11000;
+   // 获取错误信息
+  const msg = ERROR_CODE[code] || res.data.msg || ERROR_CODE['default']
+  if (code === 401) {
+    MessageBox.confirm(msg, '系统提示', {
+        confirmButtonText: '重新登录',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    ).then(() => {
+      store.dispatch('handleLogOut').then(() => {
+        location.href = '/login';
+      })
+    })
+  } else if (code === 500) {
+    Message({
+      message: msg,
+      type: 'error'
+    })
+    return Promise.reject(new Error(msg))
+  } else if (code !== 200 && code !== 11000) {
+    Notification.error({
+      title: msg
+    })
+    return Promise.reject(msg)
+  } else {
+    return res ;
   }
-  return response;
-}
+ }
 
 function responseError(error) {
-  clearTimeout(timer2);
-  timer2 = setTimeout(function () {
-    console.error("服务器内部异常,请稍候再试");
-  }, 500)
   return Promise.reject(error);
 }
 

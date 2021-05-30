@@ -1,28 +1,26 @@
 <template>
   <div>
-    <Row  >
-      <i-col  span="12">
-<!--         <Divider orientation="left">-->
-           <span><Icon @click="refresh" type="md-refresh-circle" style="cursor: pointer;font-size: 24px;color: #41d0ff" /></span>&nbsp;
-          <span style="font-size: 20px;font-weight: bold;color:#ccc;padding: 10px">实例运行统计</span>
-<!--        </Divider>-->
+    <Row>
+      <i-col  span="10">
+         <Divider orientation="left"><span><Icon @click="refresh" type="md-refresh-circle" style="cursor: pointer;font-size: 24px;color: #41d0ff" /></span>&nbsp;
+          <span style="font-size: 20px;font-weight: bold;color:#ccc">实例运行统计</span></Divider>
       </i-col>
-    <i-col   span="8" offset="4">
-<!--      <Divider orientation="right">-->
+    <i-col   span="14">
+      <Divider orientation="right">
         <span style="color:#ccc"> 统计截止日期:&nbsp;{{initTime}}</span>&nbsp;
       <DatePicker @on-change="dateChange"  type="daterange" format="yyyy-MM-dd"
                   placeholder="选择日期" :value = "iniDate"
                   style="width: 200px"></DatePicker>
-<!--      </Divider>-->
+      </Divider>
     </i-col>
     </Row>
     <Row >
-         <i-col  span="5"><span style="font-size: 20px;font-weight: bold;color: #ffffff">运行详情</span>
+         <i-col  span="5"><span style="font-size: 20px;font-weight: bold;color: #0a110c">运行详情</span>
            &nbsp; &nbsp; &nbsp;<Icon type="ios-images" style="color:#41d0ff" />&nbsp;<span>实例总数</span>&nbsp;
            <span style="font-size: 20px;color: #ccc">{{totalInstances}}</span></i-col>
      </Row>
     <br/>
-    <Row  :gutter="22" >
+    <Row  :gutter="20" >
       <i-col  :lg="6"v-for="(infor, i) in inforCardData" :key="`infor-${i}`"
              style="height: 125px;padding: 10px;">
         <infor-card shadow :color="infor.color" :title="infor.title" :pieData="infor.count" :count2="infor.count2" :icon-size="36">
@@ -35,7 +33,7 @@
     </Row>
     <br/>
     <Row >
-    <i-col  span="4"><span style="font-size: 20px;font-weight: bold;color: #ffffff">实例详情</span> </i-col>
+    <i-col  span="4"><span style="font-size: 20px;font-weight: bold;color: #0a110c">实例详情</span> </i-col>
   </Row>
     <Row :gutter="20" style="margin-top: 10px;">
       <i-col span="24">
@@ -48,7 +46,7 @@
     <br/>
 
     <Row >
-      <i-col  span=18><span style="font-size: 20px;font-weight: bold;color: #ffffff">运行趋势</span></i-col>
+      <i-col  span=18><span style="font-size: 20px;font-weight: bold;color: #0a110c">运行趋势</span></i-col>
       <i-col  span="6">  <span style="color:#ccc"> 统计时间:&nbsp;{{iniDate[0]}}&nbsp;至&nbsp;{{iniDate[1]}}</span>&nbsp;</i-col>
     </Row>
     <br/>
@@ -71,7 +69,7 @@
     </Row>
     <br/>
     <Row >
-      <i-col  span=18><span style="font-size: 20px;font-weight: bold;color: #ffffff">运行告警统计</span></i-col>
+      <i-col  span=18><span style="font-size: 20px;font-weight: bold;color: #0a110c">运行告警统计</span></i-col>
       <i-col  span="6">  <span style="color:#ccc"> 统计时间:&nbsp;{{iniDate[0]}}&nbsp;至&nbsp;{{iniDate[1]}}</span>&nbsp;</i-col>
     </Row>
     <br/>

@@ -29,14 +29,14 @@
                    v-bind="tableProps"
                     @on-row-click="onRowClick" border >
         <div slot="buttons">
-          <Button   type='dashed' icon="ios-cash" @click="gotoCreate">创建作业(按模板)</Button>
-          <Button   type='dashed' icon="ios-cash" @click="gotoAdd">新建作业(已有)</Button>
-          <Button  type='dashed' shape="circle"    icon="ios-clock-outline" @click="doCopyJob">复制作业</Button>
-          <Button  type='dashed'  shape="circle" icon="md-cloudy-night" @click="doGetJobImage">调度监控</Button>
-          <Button  type='dashed'  shape="circle" icon="ios-nuclear-outline" @click="doRunJob">本地运行</Button>
-          <Button type='dashed' shape="circle" icon="ios-nuclear-outline" @click="">远程运行</Button>
-          <Button  type='dashed'  shape="circle" icon="ios-nuclear-outline" @click="doStopJob">停止</Button>
-          <Button type='dashed' shape="circle" icon="ios-nuclear-outline" @click="doKillJob">终止</Button>
+          <Button   type='warning' ghost icon="ios-cash" @click="gotoCreate">创建作业(按模板)</Button>
+          <Button   type='error'  ghost icon="ios-cash" @click="gotoAdd">新建作业(已有)</Button>
+          <Button  type='success'  ghost shape="circle"    icon="ios-clock-outline" @click="doCopyJob">复制作业</Button>
+          <Button  type='warning' ghost shape="circle" icon="md-cloudy-night" @click="doGetJobImage">调度监控</Button>
+          <Button  type='success' ghost shape="circle" icon="ios-nuclear-outline" @click="doRunJob">本地运行</Button>
+          <Button type='warning' ghost shape="circle" icon="ios-nuclear-outline" @click="">远程运行</Button>
+          <Button  type='success' ghost  shape="circle" icon="ios-nuclear-outline" @click="doStopJob">停止</Button>
+          <Button type='warning' ghost shape="circle" icon="ios-nuclear-outline" @click="doKillJob">终止</Button>
         </div>
       </xtl-table>
       <image-modal :imgModal="imgModal" :logText="logText" :row="selection" @on-ok="onrepoModalOk" @on-cancel="onrepoModalCancel" ></image-modal>
@@ -55,7 +55,7 @@
   const editButton = (vm, h, currentRow) => {
     return h('Button', {
       props: {
-        type: "dashed",
+        type: "warning",
         size: "small",
 
       },
@@ -74,7 +74,7 @@
   const delOpButton = (vm, h, currentRow) => {
     return h('Button', {
       props: {
-        type: "dashed",
+        type: "warning",
         size: "small",
 
       },
@@ -93,7 +93,7 @@
   const setVarButton = (vm, h, currentRow) => {
     return h('Button', {
       props: {
-        type: "dashed",
+        type: "warning",
         size: "small",
 
       },
@@ -158,7 +158,7 @@
           {
             title: "作业名称",
             align: "left",
-            width: "200",
+            width: "250",
             sortable: true,
             resizable: true,
             render: (h, { row }) => {
@@ -167,7 +167,7 @@
 
                 {
                   style:{
-                    color:'#183754',
+                    color:'#fff',
                     fontWeight:900,
                     underline:'underline'
                   },
@@ -248,7 +248,7 @@
             title: "所在路径",
             key: "jobPath",
             align: "center",
-            width: "120",
+            width: "220",
           },
           {
             title: "日志级别",
@@ -464,7 +464,7 @@
             }
           }).then(function(resp) {
             let result = resp.data ;
-            self.$Message.success(result.message);
+            self.$Message.success(result.msg);
             self.reload();
           }).catch((err) => {
             this.$Message.error("作业停止异常,错误信息:" + err);
@@ -486,7 +486,7 @@
             }
           }).then(function(resp) {
             let result = resp.data ;
-            self.$Message.success(result.message);
+            self.$Message.success(result.msg);
             self.reload();
           }).catch((err) => {
             this.$Message.error("作业终止异常,错误信息:" + err);

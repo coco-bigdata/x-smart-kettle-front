@@ -4,44 +4,46 @@
       <xtl-search @do-search="doSearch">
         <div>
           <Form :label-width="120">
-            <FormItem label="任务名称">
-              <Input v-model="searchForm.jobName" placeholder="按任务名称查询" style="width: 200px"/>
+            <FormItem label="登录地址">
+              <Input v-model="searchForm.ipAddr" placeholder="请输入登录地址" style="width: 200px"/>
             </FormItem>
-            <formItem label="运行日期:" >
-              <DatePicker @on-change="dateChange"  type="daterange" format="yyyy-MM-dd"
-                          placeholder="选择日期" :value = "iniDate"
-                          style="width: 180px"></DatePicker>
-            </formItem>
-            <FormItem label="运行状态">
-              <Select v-model="searchForm.targetResult" transfer :multiple="false" style="width: 200px;">
+            <FormItem label="用户名称">
+              <Input v-model="searchForm.userName" placeholder="请输入用户名称" style="width: 200px"/>
+            </FormItem>
+            <FormItem label="登录状态">
+              <Select v-model="searchForm.status" transfer :multiple="false" style="width: 200px;">
                 <Option value="">请选择</Option>
-                <Option v-for="item in jobStatusDicts" :value="item.dictKey" :key="item.dictKey">
-                  {{item.dictValue }}
-                </Option>
+                <Option value="登录成功" ></Option>
+                <Option value="登录失败" ></Option>
               </Select>
             </FormItem>
+            <formItem label="登录时间" >
+              <DatePicker @on-change="dateChange"  type="daterange" format="yyyy-MM-dd"
+                          placeholder="选择日期" :value = "iniDate"
+                          style="width: 200px"></DatePicker>
+            </formItem>
           </Form>
         </div>
       </xtl-search>
       <xtl-table
         :row-class-name="rowClassName"
          :columns="tableColumns"
+        @on-row-click="onRowClick"
                    v-bind="tableProps"
         @on-selection-change="onSelectionChange"  border >
         <div slot="buttons">
-          <Button   type='warning' ghost icon="ios-cash" @click="doBatchDel">清理日志</Button>
-        </div>
+           <Button   type='error' ghost icon="ios-trash" @click="doBatchDel">清空</Button>
+         </div>
       </xtl-table>
-     </xtl-page>
+      <login-info-modal :loginInfoModal="loginInfoModal"  :row="selection" @on-ok="onrepoModalOk" @on-cancel="onrepoModalCancel" ></login-info-modal>
+    </xtl-page>
    </div>
 </template>
 
 <script>
   import util from '@/libs/util.js';
   import config from '@/config/config';
-  import JobModal from "@/view/job/job-modal";
-  import ImageModal from "@/view/job/image-modal";
-
+  import loginInfoModal from "@/view/log/loginInfo-modal";
 
   // 设置为无效,则该作业将会废弃,不再执行
   const downloadButton = (vm, h, currentRow) => {
@@ -56,10 +58,10 @@
       },
       on: {
         "click": () => {
-          vm.doDownLoadOp(currentRow);
+          vm.doGetInfo(currentRow);
         }
       }
-    }, '日志下载');
+    }, '查看详情');
   };
 
 
@@ -67,33 +69,38 @@
     name: "index",
     inject:['reload'],
     components: {
-      JobModal,
-      ImageModal
+      loginInfoModal
     },
      data() {
       return {
-        jobModal:false,
-        imgModal: false,
-        logText:'',
-        isMonitorEnabled:false,
-        jobStatusDicts:[],
-        idSelectedArr: [],
-        iniDate:[util.formatDate(util.getBeforeOrNxtDay(0)), new Date().Format('yyyy-MM-dd')],
+        loginInfoModal: false,
+         isMonitorEnabled:false,
+         idSelectedArr: [],
+        iniDate:[util.formatDate(util.getBeforeOrNxtDay(-1)), util.formatDate(util.getBeforeOrNxtDay(1))],
          searchForm: {
-          createDateEnd:util.formatDate(util.getBeforeOrNxtDay(0)),
-          createDateBegin: util.formatDate(util.getBeforeOrNxtDay(0)),
-          jobName:'',
-          targetResult:''
+          loginStartTime:util.formatDate(util.getBeforeOrNxtDay(-1)),
+          loginEndTime: util.formatDate(util.getBeforeOrNxtDay(1)),
+          userName:'',
+          ipAddr:'',
+          status:'',
         },
-         databaseTypeList: [],
-        selection: {
-          jobId:'',
-          jobName:''
+         selection: {
+           userName:'',
+           ipaddr:'',
+           loginLocation:'',
+           browser:'',
+           os:'',
+           status:'',
+           msg:'',
+           loginTime:''
         },
         tableProps: {
-          dataUrl: config.xtlServerContext + "/op/xlog/listPage",
+          dataUrl: config.xtlServerContext + "/log/loginedUserList",
           data: [],
-          searchParams: {},
+          searchParams: {
+            loginStartTime:util.formatDate(util.getBeforeOrNxtDay(-1)),
+            loginEndTime: util.formatDate(util.getBeforeOrNxtDay(1))
+          },
         }
       }
     },
@@ -108,64 +115,63 @@
             width: "80",
           },
           {
-            title: "任务名称",
+            title: "用户名称",
             align: "left",
             width: "250",
             sortable: true,
             resizable: true,
             render: function (h, param) {
-              let name = param.row.name;
+              let name = param.row.userName;
               if (name) {
                 return h("strong", {
                   style:{
-                    color:'#43afc'
+                    color:'#fff'
                   }
                 }, name);
               }
             },
           },
           {
-            title: "任务类型",
+            title: "登录地址",
             align: "left",
-            key: 'logType',
+            key: 'ipaddr',
             resizable: true,
-            width: "100",
-          },
-
-
-          {
-            title: "开始时间",
-            key: "startTime",
-            align: "center",
-            sortable: true,
-            width: "250",
-          },
-          {
-            title: "结束时间",
-            key: "stopTime",
-            align: "center",
-            sortable: true,
-            width: "250",
-          },
-          {
-            title: "运行结果",
-            key: "result",
-            align: "center",
             width: "150",
-            render: function (h, param) {
-              let target_result = param.row.result;
-              if ( !target_result || target_result =='' || target_result =='null') {
-                return h('div', [
-                  h('strong', '未运行')
-                ]);
-              }else {
-                return h('div', [
-                  h('strong', target_result)
-                ]);
-              }
-            }
-          }
-
+          },
+          {
+            title: "登录地点",
+            key: "loginLocation",
+            align: "center",
+            sortable: true,
+            width: "250",
+          },
+          {
+            title: "终端类型(浏览器)",
+            key: "browser",
+            align: "center",
+            sortable: true,
+            width: "250",
+          },
+          {
+            title: "操作系统",
+            key: "os",
+            align: "center",
+            sortable: true,
+            width: "250",
+          },
+          {
+            title: "登录状态",
+            key: "status",
+            align: "center",
+            width: "150"
+          },
+          {
+            title: "登录时间",
+            key: "loginTime",
+            align: "center",
+            sortable: true,
+            width: "250",
+          },
         );
         columns.push({
           title: "操作",
@@ -186,15 +192,17 @@
       this.initData();
     },
     methods: {
+      onrepoModalOk(node) {
+        this.loginInfoModal = false
+      },
+      onrepoModalCancel() {
+        this.loginInfoModal = false
+      },
       onSelectionChange: function (selection) {
         let self = this;
         self.idSelectedArr = [];
         for (let item of selection) {
-          let msg = item.result
-          if(msg !== '运行中'){
-            self.idSelectedArr.push(item.logId);
-          }
-
+          self.idSelectedArr.push(item.id);
         }
       },
       doBatchDel(row) {
@@ -207,21 +215,21 @@
           self.$Modal.confirm({
             title: '操作提示',
             content: '<p>执行此操作,将会彻底清除,请谨慎操作!</p>',
-            okText: '清理日志',
+            okText: '清理登录信息',
             cancelText: '取消',
             onOk: () => {
-              util.ajax.get(config.xtlServerContext+"/op/xlog/delete",{
+              util.ajax.get(config.xtlServerContext+"/log/deleteLoginInfo",{
                 params:{
                   ids:idSelectedArr.toString()
                 }
               }).then(function(resp) {
                 let result = resp.data ;
                 if(result.code === 11000){
-                  self.$Message.success("日志清理成功!!");
+                  self.$Message.success("清理成功!!");
                   self.reload();
                 }
               }).catch((err) => {
-                this.$Message.error("日志清理异常,错误信息:" + err);
+                this.$Message.error("清理异常,错误信息:" + err);
               })
             },
             onCancel: () => {
@@ -232,24 +240,15 @@
 
       },
       rowClassName (row, index) {
-        let result = row.result ;
-       if (result === '运行中' ||  result ==='等待中') {
-          return 'demo-table-error-row';
-        }
+
         return '';
       },
       dateChange : function (e) {
         this.iniDate = e;
-        this.searchForm.createDateBegin = e[0];
-        this.searchForm.createDateEnd = e[1];
+        this.searchForm.loginStartTime = e[0];
+        this.searchForm.loginEndTime = e[1];
       },
       initData() {
-        let self = this;
-          util.ajax.get(config.xtlServerContext+"/api/xrepo/getTransStatusDicts").then(function(resp) {
-            self.jobStatusDicts = resp.data.data;
-          }).catch((err) => {
-          this.$Message.error("获取作业状态字典错误,错误信息:" + err);
-        })
       },
       doSearch() {
         this.tableProps.searchParams = Object.assign({}, this.searchForm);
@@ -259,10 +258,10 @@
          this.selection = val;
        },
 
-      doDownLoadOp(row) {
+      doGetInfo() {
           let self = this
-        window.location.href=config.xtlServerContext+"/op/xlog/downLog/"+row.logId ;
-      }
+          self.loginInfoModal = true
+       }
 
     },
   }

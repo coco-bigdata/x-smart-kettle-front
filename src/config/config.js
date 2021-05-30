@@ -7,7 +7,7 @@ let config = {
    /**
    * @description 配置显示在浏览器标签的title
    */
-  title: 'Smart Kettle 调度监控平台',
+  title: 'Smart Kettle',
   /**
    * @description 前端项目上下文
    */
@@ -15,10 +15,10 @@ let config = {
 
   baseUrl: {
     dev: 'http://localhost:8080/kettle-admin/',
-    pro: 'http://localhost/kettle-admin/'
+    pro: 'http://101.132.24.211/kettle-admin/'
   },
 
-  TOKEN_KEY: "token",
+  TOKEN_KEY: "Xtl-Token-Key",
 
   /**
    * @description token在Cookie中存储的天数，默认30分钟

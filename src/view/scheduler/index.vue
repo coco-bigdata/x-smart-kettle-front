@@ -373,7 +373,7 @@
             }).then(function(resp) {
               let data = resp.data;
               if (data.code ===11000){
-                self.$Message.success(data.message);
+                self.$Message.success(data.msg);
                 self.reload();
               }
             }).catch((err) => {

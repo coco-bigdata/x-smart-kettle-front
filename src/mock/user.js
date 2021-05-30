@@ -1,5 +1,5 @@
 import Mock from 'mockjs'
-import { doCustomTimes, getParams } from '@/libs/util'
+import { doCustomTimes, getParams } from '@/libs/platformUtil'
 const Random = Mock.Random
 
 export const getMessageInit = () => {
@@ -54,14 +54,14 @@ export const messageCount = () => {
   return 3
 }
 
-export const verifyToken = req => {
-  const params = getParams(req.url);
-  let token = params.token ;
-  if(token){
-    return {code:1,data:token}
-  }
-  return {code:-1,data:null}
-}
+// export const verifyToken = req => {
+//   const params = getParams(req.url);
+//   let token = params.token ;
+//   if(token){
+//     return {code:1,data:token}
+//   }
+//   return {code:-1,data:null}
+// }
 
 export const getThirdToken = () => {
   return {code:1,data:"aaaa",msg:"success"}

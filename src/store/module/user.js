@@ -1,10 +1,9 @@
 import {
   login,
   logout,
-  getUserInfo,
-  getThirdToken
+  getUserInfo
 } from '@/api/user'
-import { TOKEN_KEY,THIRD_TOKEN_KEY,setToken, getToken } from '@/libs/platformUtil'
+import {setToken, getToken ,removeToken} from '@/libs/platformUtil'
 import Vue from 'vue'
 import { getPermission } from '@/api/app'
 export default {
@@ -13,7 +12,6 @@ export default {
     avatarImgPath: '',
     token: getToken(),
     unreadCount: 0,
-    // thirdToken: getToken(),
     hasGetInfo: false,
   },
   getters:{
@@ -33,24 +31,21 @@ export default {
       state.token = token
       setToken(token)
     },
-    // setThirdToken (state, token) {
-    //   state.thirdToken = token
-    //   setToken(THIRD_TOKEN_KEY,token)
-    // }
   },
   actions: {
     // 登录
-    handleLogin ({ commit }, { userName, password,verification }) {
+    handleLogin ({ commit }, { userName, passWord,verifyCode,uuid }) {
       userName = userName.trim()
       return new Promise((resolve, reject) => {
         login({
           userName,
-          password,
-          verification
+          passWord,
+          verifyCode,
+          uuid
         }).then(res => {
           const result = res.data
-          if (result && result.code === 1) {
-            commit('setToken',result.data.token)
+          if (result && (result.code === 200 ||  result.code === 11000 )) {
+            commit('setToken',result.data)
             commit('setTagNavList', [])
              resolve()
           } else {
@@ -68,8 +63,8 @@ export default {
         logout(state.token).then(() => {
           commit('setToken', '')
           commit('setUserName', '')
-          // commit('setThirdToken', '')
-          //刷新浏览器，清空动态路由
+          removeToken();
+           //刷新浏览器，清空动态路由
           setTimeout(() => {
             window.location.reload()
           },0)
@@ -84,7 +79,7 @@ export default {
       return new Promise((resolve, reject) => {
         getUserInfo().then(res => {
           const result = res.data;
-          if (result && result.code === 1) {
+          if (result &&( result.code === 11000 || result.code === 200 )) {
              commit('setAvatar', result.data.avatar)
             commit('setUserName', result.data.userName)
             resolve(result.data)
@@ -96,26 +91,11 @@ export default {
         })
       })
     },
-    // 获取第三方集成token
-    getThirdToken({state, commit}) {
-      return new Promise((resolve, reject) => {
-        getThirdToken().then(res => {
-          let result = res.data;
-          if (result && result.code === 1) {
-            commit('setThirdToken', result.data)
-            resolve(result.data)
-          } else {
-            reject(new Error(result.msg))
-          }
-        }).catch(err => {
-          reject(err)
-        })
-      })
-    },
+
     getPermissionData({commit}) {
       return new Promise((resolve, reject) => {
         getPermission().then(({data: result}) => {
-          if (result && result.code === 1 && result.data) {
+           if (result && result.code === 11000 && result.data) {
             let permission = {}
             for (const item of result.data) {
               if (item.permissionValue) {

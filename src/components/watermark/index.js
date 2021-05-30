@@ -15,7 +15,7 @@ let setWatermark = (str1, str2) => {
   let cans = can.getContext('2d')
   cans.rotate(-20 * Math.PI / 180) // 水印旋转角度
   cans.font = '15px Vedana'
-  cans.fillStyle = '#666666'
+  cans.fillStyle = '#5cf3ff'
   cans.textAlign = 'center'
   cans.textBaseline = 'Middle'
   cans.fillText(str1, can.width / 2, can.height) // 水印在画布的位置x，y轴

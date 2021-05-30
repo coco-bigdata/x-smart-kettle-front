@@ -1,10 +1,31 @@
 import IframeView from '@/components/iframe-view'
 import config from '@/config/config'
 export default {
-  '资源库管理': {
+  '资源库目录树': {
      url: '/xtl/repo',
     component: 'repo/tree'
   },
+
+  '文件库资源库': {
+    url: '/xtl/file_repo',
+    component: 'repo/file_repo'
+  },
+
+  '数据库资源库': {
+    url: '/xtl/db_repo',
+    component: 'repo/db_repo'
+  },
+
+  '编辑文件库资源库': {
+    url: '/xtl/file_edit_repo',
+    component: 'repo/file_edit_repo'
+  },
+
+  '编辑数据库资源库': {
+    url: '/xtl/db_edit_repo',
+    component: 'repo/db_edit_repo'
+  },
+
 
   '业务数据库': {
     url: '/xtl/business/db',
@@ -108,16 +129,28 @@ export default {
 
 
 
-  '日志管理': {
+  '调度日志': {
 
     url: '/xtl/log',
     component: 'log/index'
   },
 
-  '数据库监控': {
+  '登录日志': {
+
+    url: '/xtl/log/login',
+    component: 'log/login_log'
+  },
+
+  '操作日志': {
+
+    url: '/xtl/log/operate',
+    component: 'log/operate_log'
+  },
+
+  '数据监控': {
 
     url: '/xtl/help/db',
-    frameUrl:config.xtlServerContext+'/drd/sql.html',
+    frameUrl:config.xtlServerContext+'/druid/sql.html',
     component: IframeView
   },
   '定时正则': {

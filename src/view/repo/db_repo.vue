@@ -4,27 +4,29 @@
       <xtl-search @do-search="doSearch">
         <div>
           <Form :label-width="120">
-            <FormItem label="字典名">
-              <Input v-model="searchForm.name" placeholder="按字典名称查询" style="width: 200px"/>
+            <FormItem label="资源库名称">
+              <Input v-model="searchForm.repoName" placeholder="按资源库名称查询" style="width: 200px"/>
             </FormItem>
           </Form>
         </div>
       </xtl-search>
       <xtl-table
+        :row-class-name="rowClassName"
         :columns="tableColumns"
-        v-bind="tableProps"
-        @on-row-click="onRowClick" border >
+                   v-bind="tableProps"  border >
         <div slot="buttons">
-          <Button   type='dashed' icon="ios-cash" @click="gotoAdd">新增字典</Button>
+          <Button   type='warning' ghost icon="ios-cash" @click="doInsert">新增</Button>
         </div>
       </xtl-table>
-    </xtl-page>
-  </div>
+     </xtl-page>
+   </div>
 </template>
 
 <script>
   import util from '@/libs/util.js';
   import config from '@/config/config';
+  import JobModal from "@/view/job/job-modal";
+  import ImageModal from "@/view/job/image-modal";
 
 
   // 设置为无效,则该作业将会废弃,不再执行
@@ -40,11 +42,12 @@
       },
       on: {
         "click": () => {
-          vm.doEditOp(currentRow);
+          vm.doEdit(currentRow.repoId);
         }
       }
     }, '编辑');
   };
+
 
   // 设置为无效,则该作业将会废弃,不再执行
   const delOpButton = (vm, h, currentRow) => {
@@ -59,36 +62,30 @@
       },
       on: {
         "click": () => {
-          vm.doDelOp(currentRow);
+          vm.doDelOp(currentRow.repoId);
         }
       }
     }, '删除');
   };
 
-
   export default {
     name: "index",
     inject:['reload'],
-    components: {},
-    data() {
+    components: {
+
+    },
+     data() {
       return {
-        jobModal:false,
-        imgModal: false,
-        logText:'',
-        isMonitorEnabled:false,
-        jobStatusDicts:[],
-        idSelectedArr: [],
-        iniDate:[util.formatDate(util.getBeforeOrNxtDay(-1)), new Date().Format('yyyy-MM-dd')],
-        searchForm: {
-          name:'',
-          databaseContype:''
-        },
-        databaseTypeList: [],
+          idSelectedArr: [],
+          searchForm: {
+           repoName:'',
+         },
+         databaseTypeList: [],
         selection: {
-          id:'',
+          repoId:'',
         },
         tableProps: {
-          dataUrl: config.xtlServerContext + "/op/xdict/listPage",
+          dataUrl: config.xtlServerContext + "/api/xrepo/listDbRepoList",
           data: [],
           searchParams: {},
         }
@@ -105,55 +102,52 @@
             width: "80",
           },
           {
-            title: "字典名",
+            title: "资源库名称",
             align: "left",
             width: "200",
+            key:'repoName',
             sortable: true,
             resizable: true,
-            render: function (h, param) {
-              let name = param.row.dictName;
-              if (name) {
-                return h("strong", {
-                  style:{
-                    color:'#43afc'
-                  }
-                }, name);
-              }
-            },
           },
           {
-            title: "字典主键",
-            key: "dictId",
+            title: "资源库主机",
+            key: "result",
+            key:'dbHost',
             align: "center",
             width: "120",
-            sortable: true,
-            resizable: true,
-          },
-          {
-            title: "字典Key",
-            key: "dictKey",
-            align: "center",
-            width: "100"
-          },
-          {
-            title: "字典值",
-            align: "left",
-            key: 'dictValue',
-            resizable: true,
-            width: "200",
-          },
-          {
-            title: "字典描述",
-            align: "left",
-            key: 'dictDesc',
-            resizable: true,
-            width: "200",
           },
 
+          {
+            title: "资源库端口",
+            key: "result",
+            key:'dbPort',
+            align: "center",
+            width: "120",
+          },
+
+          {
+            title: "资源库数据库",
+            align: "left",
+            key: 'dbName',
+            resizable: true,
+            width: "200",
+          },
+          {
+            title: "基础路径",
+            align: "left",
+            key: 'baseDir',
+            resizable: true,
+            width: "200",
+          },
+          {
+            title: "创建时间",
+            align: "left",
+            key: 'createdTime',
+             width: "200",
+          }
         );
         columns.push({
           title: "操作",
-          key: "operation",
           align: "center",
           fixed: "right",
           width: '300',
@@ -162,7 +156,6 @@
               editOpButton(self,h,param.row),
               delOpButton(self,h,param.row)
             ]);
-
           }
         });
         return columns;
@@ -172,57 +165,51 @@
 
     },
     methods: {
+      rowClassName (row, index) {
+
+        return '';
+      },
+
 
       doSearch() {
         this.tableProps.searchParams = Object.assign({}, this.searchForm);
       },
 
-      onRowClick(val) {
-        this.selection = val;
-      },
-
-      gotoAdd() {
+      doInsert(){
         this.$router.push({
-          name: '业务字典编辑'
+          name: '编辑数据库资源库'
         });
       },
 
-      doEditOp(row){
-        let self = this
-        let id = row.dictId
-        self.$router.push({
-          name: "业务字典编辑",
+      doEdit(repoId) {
+         this.$router.push({
+          name: "编辑数据库资源库",
           query: {
-            id
+            repoId
           },
           params: {
-            page: 'params'
+            page: 'db_edit_repo'
           }
         });
       },
-      doDelOp(row) {
-        let self = this
-        //移除字典任务
+
+        doDelOp(repoId) {
+          let self = this
+
         self.$Modal.confirm({
           title: '操作提示',
-          content: '<p>执行此操作,字典将会彻底删除,请谨慎操作!</p>',
-          okText: '移除字典',
+          content: '<p>确定删除?</p>',
+          okText: '删除',
           cancelText: '取消',
           onOk: () => {
-
-            util.ajax.get(config.xtlServerContext+"/op/xdict/delete",{
-              params:{
-               dictId: row.dictId,
-                dictKey:row.dictKey
-              }
-            }).then(function(resp) {
+            util.ajax.get(config.xtlServerContext+"/op/xrepository/delete/"+repoId).then(function(resp) {
               let data = resp.data;
               if (data.code ===11000){
                 self.$Message.success(data.msg);
                 self.reload();
               }
             }).catch((err) => {
-              this.$Message.error("删除字典异常,错误信息:" + err);
+              this.$Message.error("资源库删除异常,错误信息:" + err);
             })
           },
           onCancel: () => {
@@ -235,3 +222,9 @@
   }
 </script>
 
+<style>
+  .ivu-table .demo-table-error-row td{
+    background-color: #ff6600 !important;
+    color: #ffffff;
+  }
+</style>

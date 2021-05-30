@@ -165,7 +165,7 @@
                                     self.pageGoBack();
 
                                   }else {
-                                    self.$Message.error(data.message)
+                                    self.$Message.error(data.msg)
                                     self.$Message.destroy()
                                     self.pageGoBack();
                                   }

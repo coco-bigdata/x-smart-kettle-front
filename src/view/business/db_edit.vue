@@ -162,7 +162,7 @@
                 let code = data.code
 
                 if (code === 11000) {
-                  self.$Message.success(data.message)
+                  self.$Message.success(data.msg)
                 } else {
                   self.$Message.error('连接出现异常')
                 }

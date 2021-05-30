@@ -12,6 +12,7 @@ import { directive as clickOutside } from "v-click-outside-x";
 import "./index.less";
 import "@/./assets/icons/iconfont.css";
 import { Tree, Table, TableColumn } from "element-ui";
+import  util from "@/libs/util" ;
 // 实际打包时应该不引入mock
 /* eslint-disable */
 // if(process.env.NODE_ENV !== 'production')
@@ -40,6 +41,12 @@ Vue.config.productionTip = false;
  * @description 全局注册应用配置
  */
 Vue.prototype.$config = config;
+
+/**
+ *  将util工具注册为全局
+ */
+Vue.prototype.util = util ;
+
 /**
  * 注册指令
  */

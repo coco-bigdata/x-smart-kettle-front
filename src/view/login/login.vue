@@ -35,13 +35,13 @@
       </CarouselItem>
     </Carousel>
     <div class="login-con">
-      <Card icon="log-in" title="欢迎登录Smart Kettle调度监控平台"   :bordered="false">
+      <Card icon="log-in" title="欢迎访问Smart Kettle调度监控平台"   :bordered="false">
         <div style="text-align:center">
           <img src="../../../public/logo-min.png" style="width: 50%;height: 50%;">
          </div>
         <div class="form-con">
           <login-form @on-success-valid="handleSubmit" :loading="loading"></login-form>
-          <p class="login-tip">输入用户名admin或superadmin,密码随便,即可登录</p>
+          <p class="login-tip">输入用户名admin或superadmin,密码为1,即可登录</p>
         </div>
       </Card>
     </div>
@@ -83,10 +83,10 @@ export default {
       'handleLogin',
       'getUserInfo'
     ]),
-    handleSubmit ({ userName, password ,verification}) {
+    handleSubmit ({ userName, passWord ,verifyCode,uuid}) {
       const that = this
       that.loading = true
-      that.handleLogin({ userName, password,verification }).then(res => {
+      that.handleLogin({ userName, passWord,verifyCode,uuid }).then(res => {
          if (that.getToken() != null ){
           this.$Message.success({
             closable: true,

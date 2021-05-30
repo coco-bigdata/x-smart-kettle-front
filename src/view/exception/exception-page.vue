@@ -46,7 +46,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #fff;
+    background-color: #255676;
     .img{
       padding-right: 52px;
       zoom: 1;
@@ -56,14 +56,14 @@ export default {
     }
     .content{
       h1{
-        color: #434e59;
+        color: wheat;
         font-size: 72px;
         font-weight: 600;
         line-height: 72px;
         margin-bottom: 24px;
       }
       .desc{
-        color: rgba(0,0,0, 0.45);
+        color: rgba(255,255,255, 0.45);
         font-size: 20px;
         line-height: 28px;
         margin-bottom: 16px;

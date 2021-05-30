@@ -20,7 +20,7 @@
         v-bind="tableProps"
          @on-selection-change="onSelectionChange" >
         <div slot="buttons">
-          <Button   type='dashed' icon="ios-cash" @click="doBatchDel">删除记录</Button>
+          <Button   type='warning' ghost icon="ios-cash" @click="doBatchDel">删除记录</Button>
         </div>
       </xtl-table>
       <msg-modal :msgModal="msgModal" :jobName="jobName" :logText="logText" @on-ok="onrepoModalOk" @on-cancel="onrepoModalCancel" ></msg-modal>

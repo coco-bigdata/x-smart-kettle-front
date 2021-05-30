@@ -48,7 +48,14 @@ export default {
           {
             type: 'category',
             boundaryGap: true,
-            data: this.xExampleData
+            data: this.xExampleData,
+            //设置轴线的属性
+            axisLine:{
+              lineStyle:{
+                color:'#ccc',
+                width:8,//这里是为了突出显示加上的
+              }
+            }
           }
         ],
         yAxis: [

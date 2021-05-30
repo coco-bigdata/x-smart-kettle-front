@@ -25,7 +25,6 @@ export const generatorDynamicRouter = (permissionList) => {
   }
 
      const dynamicRouter = generator(menuData)
-  console.log(dynamicRouter,9899)
    return dynamicRouter
 }
 

@@ -27,10 +27,9 @@
 </template>
 
 <script>
-  import util from '@/libs/util.js';
-  import config from '@/config/config';
+   import config from '@/config/config';
   import InputCron from '@/components/cron/input-cron';
-
+   import util from '@/libs/util.js';
   export default {
     name: "trans-modal",
     components: {
@@ -135,13 +134,14 @@
                   });
                 }else {
                   self.loading=false
-                  self.$Message.error(resp.data.message);
+                  self.$Message.error(resp.data.msg);
                 }
               }).catch((err) => {
                 self.loading=false
                 this.$Message.error("转换运行异常,错误信息:" + err);
               })
             }else {
+
               util.ajax.get(config.xtlServerContext + "/api/xtrans/addTrans2Sche",{
                 params:{
                   transId:self.transId,
@@ -167,7 +167,7 @@
                   self.loading=false
                   self.$Modal.confirm({
                     title: '操作失败提示',
-                    content: '<p>'+resp.data.message+'</p>',
+                    content: '<p>'+resp.data.msg+'</p>',
                     okText: '移步定时管理',
                     cancelText: '取消',
                     onOk: () => {

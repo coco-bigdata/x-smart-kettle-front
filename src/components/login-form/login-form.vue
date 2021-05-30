@@ -7,17 +7,17 @@
         </span>
       </Input>
     </FormItem>
-    <FormItem prop="password">
-      <Input   size="large"  type="password" v-model="form.password" placeholder="请输入密码">
+    <FormItem prop="passWord">
+      <Input   size="large"  type="password" v-model="form.passWord" placeholder="请输入密码">
         <span slot="prepend">
           <Icon :size="24" type="md-lock"></Icon>
         </span>
       </Input>
     </FormItem>
-    <FormItem prop="verification">
-      <Input   size="large"   v-model="form.verification" placeholder="验证码">
+    <FormItem prop="verifyCode">
+      <Input   size="large"   v-model="form.verifyCode" placeholder="验证码">
       </Input>
-      <img :src="require('@/assets/icons/veri_'+verification_image+'.png')" @click="fleshVerify" title="换一张"
+      <img :src="base64_image" @click="fleshVerify" title="换一张"
         border="0" style="		width: 100px;		display: block;		margin-top: 10px;cursor: pointer" />
     </FormItem>
     <FormItem>
@@ -30,7 +30,7 @@
   export default {
   name: 'LoginForm',
   props: {
-    userNameRules: {
+    userName: {
       type: Array,
       default: () => {
         return [
@@ -38,7 +38,7 @@
         ]
       }
     },
-    passwordRules: {
+    passWord: {
       type: Array,
       default: () => {
         return [
@@ -46,7 +46,7 @@
         ]
       }
     },
-    verificationRules: {
+    verifyCode: {
       type: Array,
       default: () => {
         return [
@@ -61,11 +61,12 @@
   },
   data () {
     return {
-       verification_image: "",
+       base64_image: "",
       form: {
-        userName: 'admin',
-        password: '1',
-        verification: ''
+        userName: '',
+        passWord: '',
+        verifyCode: '',
+        uuid: ''
       }
     }
   },
@@ -75,9 +76,9 @@
     computed: {
     rules () {
       return {
-        userName: this.userNameRules,
-        password: this.passwordRules,
-        verification: this.verificationRules
+        userName: this.userName,
+        passWord: this.passWord,
+        verifyCode: this.verifyCode
       }
     }
   },
@@ -88,15 +89,23 @@
       getVerifyImage({
         t: random
       }).then(function(res) {
-        let imgSrc = res.data.src ;
-        that.verification_image =imgSrc;
-      });
+        if (res && res.data && res.data.code)
+        {
+          let imgSrc = res.data.data.code ;
+          that.base64_image ="data:image/jpeg;base64,"+imgSrc.replace(/=+$/,'');
+          that.form.uuid = res.data.data.uuid
+        }
+
+      }).catch((err) => {
+        this.$Message.error("获取验证码异常,错误信息:" + err);
+      })
     },
     handleSubmit () {
       let params ={
-      userName:this.form.userName,
-        password: this.form.password,
-        verification: this.form.verification
+        userName:this.form.userName,
+        passWord: this.form.passWord,
+        verifyCode: this.form.verifyCode,
+        uuid : this.form.uuid
       }
        this.$refs.loginForm.validate((valid) => {
          let that = this;

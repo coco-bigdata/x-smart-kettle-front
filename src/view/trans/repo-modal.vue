@@ -97,7 +97,7 @@
                 self.addIcon(self.treeData);
                 callback(childs)
               } else {
-                self.$Message.error(resp.data.message)
+                self.$Message.error(resp.data.msg)
               }
             }).catch((err) => {
               self.$Message.error("数据获取异常,错误信息:" + err);

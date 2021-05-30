@@ -1,7 +1,8 @@
 import axios from 'axios'
-import { getToken } from '@/libs/platformUtil'
+import store from '@/store'
+import { Notification, MessageBox, Message } from 'element-ui'
+import { getToken ,ERROR_CODE} from '@/libs/platformUtil'
 var qs = require('qs');
-let timer1;
 
 class HttpRequest {
   constructor(baseUrl = baseURL) {
@@ -21,17 +22,19 @@ class HttpRequest {
   interceptors(instance) {
     // 请求拦截
     instance.interceptors.request.use(config => {
-      let token = getToken();//;sessionStorage.getItem("token");
-      if (token) {
-        config.headers.token = token;
+      let token = getToken();
+      const isToken = (config.headers || {}).isToken === false ;
+      //给所有请求添加 携带token 请求
+      if(token && !isToken){
+        config.headers['Authorization']='Bearer ' + token ;
       }
       if (config.method === 'post') {
         config.data = qs.stringify(config.data);
       } else if (config.method === 'get') {
         if (config.url.indexOf('?') === -1) {
-          config.url = config.url + "?token="+token+"&t=" + new Date().getTime();
+          config.url = config.url + "?&t=" + new Date().getTime();
         } else {
-          config.url = config.url + "&token="+token+"&t=" + new Date().getTime();
+          config.url = config.url + "&t=" + new Date().getTime();
         }
       }
       return config;
@@ -39,21 +42,36 @@ class HttpRequest {
       return Promise.reject(error)
     })
     // 响应拦截
-    instance.interceptors.response.use(response => {
-      var data = response.data;
-      if (data instanceof Object) {
-        var code = data["code"];
-        let token = getToken();
-        if (token == null || token ==='' || token == 'undefined') {
-          clearTimeout(timer1);
-          timer1 = setTimeout(function () {
-            if (confirm("会话已失效，是否重新登录")) {
-              router.push({name: "登录页"});
-            }
-          }, 500)
-        }
+    instance.interceptors.response.use(res => {
+      // 未设置状态码则默认成功状态
+      const code = res.data.code || 200 || 11000;
+       // 获取错误信息
+      const msg = ERROR_CODE[code] || res.data.msg || ERROR_CODE['default']
+      if (code === 401) {
+        MessageBox.confirm(msg, '系统提示', {
+            confirmButtonText: '重新登录',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).then(() => {
+          store.dispatch('handleLogOut').then(() => {
+            location.href = '/login';
+          })
+        })
+      } else if (code === 500) {
+        Message({
+          message: msg,
+          type: 'error'
+        })
+        return Promise.reject(new Error(msg))
+      } else if (code !== 200 && code !== 11000 ) {
+        Notification.error({
+          title: msg
+        })
+        return Promise.reject(msg)
+      } else {
+        return res ;
       }
-      return response;
     }, error => {
       return Promise.reject(error)
     })

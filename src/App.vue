@@ -9,7 +9,7 @@
     mapState,
     mapMutations
   } from 'vuex';
-  // import { removeWatermark, setWaterMark } from '@/components/watermark'
+  import { removeWatermark, setWaterMark } from '@/components/watermark'
   import axios from '@/libs/api.request'
 export default {
   name: 'App',
@@ -27,15 +27,15 @@ export default {
     ...mapState(['openFlag']),
   },
   mounted () {
-    // setWaterMark('yuenbin', 'https://my.oschina.net/yaukie');
+    setWaterMark('SmartKettle', 'https://my.oschina.net/yaukie');
   },
   destroyed() {
-    // removeWatermark();
+    removeWatermark();
   },
   created() {
-     if (process.env.VUE_APP_ISOPENSOURCE=='true') {
-      this.getVersion();
-    }
+    //  if (process.env.VUE_APP_ISOPENSOURCE=='true') {
+    //   this.getVersion();
+    // }
 
   },
   methods: {
@@ -58,7 +58,7 @@ export default {
             this.setUpdateOpenFlag(true);
             this.$Modal.confirm({
               title: '版本升级通知',
-              content: "您使用的是开源版本,目前版本较低<br/>"+data.msg,
+              content: "您使用的是开源演示版,目前版本较低<br/>"+data.msg,
               loading: true,
               okText: '立即升级',
               cancelText: '暂不升级',

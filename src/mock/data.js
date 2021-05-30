@@ -35,5 +35,5 @@ export const getOrgData = req => {
 }
 
 export const getPermissionData = req => {
-  return {data:permissionData,code:1,msg:'success'}
+  return {data:permissionData,code:11000,msg:'success'}
 }

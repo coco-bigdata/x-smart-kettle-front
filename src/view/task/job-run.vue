@@ -135,7 +135,7 @@
                   });
                 }else {
                   self.loading=false
-                  self.$Message.error(resp.data.message);
+                  self.$Message.error(resp.data.msg);
                 }
               }).catch((err) => {
                 self.loading=false
@@ -167,7 +167,7 @@
                   self.loading=false
                   self.$Modal.confirm({
                     title: '操作失败提示',
-                    content: '<p>'+resp.data.message+'</p>',
+                    content: '<p>'+resp.data.msg+'</p>',
                     okText: '移步定时管理',
                     cancelText: '取消',
                     onOk: () => {

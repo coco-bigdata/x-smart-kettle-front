@@ -31,6 +31,7 @@ const router = new Router({
 })
 const LOGIN_PAGE_NAME = 'login'
 let dynamicRouters=[] ;
+let that1 = this ;
 router.beforeEach((to, from, next) => {
   ViewUI.LoadingBar.start()
   const token = getToken()
@@ -43,6 +44,7 @@ router.beforeEach((to, from, next) => {
     // 要跳转的页面是登录页
     next()
   } else {
+
     if (!store.state.user.userName) {
        ViewUI.Spin.show()
         store.dispatch('getUserInfo').then(user => {

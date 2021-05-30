@@ -29,16 +29,16 @@
                    v-bind="tableProps"
                     @on-row-click="onRowClick" border >
         <div slot="buttons">
-<!--          <Button   type='dashed' icon="ios-cash" @click="gotoAdd">创建转换(按模板)</Button>-->
-          <Button   type='dashed' icon="ios-cash" @click="gotoAdd">新建转换</Button>
-<!--          <Button  type='dashed' shape="circle"    icon="ios-clock-outline" @click="doCopytrans">复制转换</Button>-->
-          <Button  type='dashed'  shape="circle" icon="md-cloudy-night" @click="doGettransImage">调度监控</Button>
-          <Button  type='dashed'  shape="circle" icon="ios-nuclear-outline" @click="doRuntrans">本地运行</Button>
-          <Button type='dashed' shape="circle" icon="ios-nuclear-outline" @click="">远程运行</Button>
-          <Button type='dashed' shape="circle" icon="ios-nuclear-outline" @click="doPauseTrans">暂停</Button>
-          <Button type='dashed' shape="circle" icon="ios-nuclear-outline" @click="doResumeTrans">恢复</Button>
-          <Button  type='dashed'  shape="circle" icon="ios-nuclear-outline" @click="doStoptrans">停止</Button>
-          <Button type='dashed' shape="circle" icon="ios-nuclear-outline" @click="doKilltrans">终止</Button>
+<!--          <Button  type='warning' ghost icon="ios-cash" @click="gotoAdd">创建转换(按模板)</Button>-->
+          <Button  type='info' ghost icon="ios-cash" @click="gotoAdd">新建转换</Button>
+<!--          <Button type='warning' ghost shape="circle"    icon="ios-clock-outline" @click="doCopytrans">复制转换</Button>-->
+          <Button  type='warning' ghost  shape="circle" icon="md-cloudy-night" @click="doGettransImage">调度监控</Button>
+          <Button type='success' ghost  shape="circle" icon="ios-nuclear-outline" @click="doRuntrans">本地运行</Button>
+          <Button type='error' ghost shape="circle" icon="ios-nuclear-outline" @click="">远程运行</Button>
+          <Button type='default' ghost shape="circle" icon="ios-nuclear-outline" @click="doPauseTrans">暂停</Button>
+          <Button type='warning' ghost shape="circle" icon="ios-nuclear-outline" @click="doResumeTrans">恢复</Button>
+          <Button type='warning' ghost  shape="circle" icon="ios-nuclear-outline" @click="doStoptrans">停止</Button>
+          <Button type='success' ghost shape="circle" icon="ios-nuclear-outline" @click="doKilltrans">终止</Button>
         </div>
       </xtl-table>
       <image-modal :imgModal="imgModal" :logText="logText" :row="selection" @on-ok="onrepoModalOk" @on-cancel="onrepoModalCancel" ></image-modal>
@@ -139,7 +139,7 @@
           {
             title: "转换名称",
             align: "left",
-            width: "200",
+            width: "250",
             sortable: true,
             resizable: true,
             render: function (h, param) {
@@ -147,7 +147,7 @@
               if (name) {
                 return h("strong", {
                   style:{
-                    color:'#183754',
+                    color:'#fff',
                     fontWeight:900,
                   }
                 }, name);
@@ -208,7 +208,7 @@
             title: "所在路径",
             key: "transPath",
             align: "center",
-            width: "120",
+            width: "250",
           },
           {
             title: "日志级别",
@@ -403,7 +403,7 @@
             }
           }).then(function(resp) {
             let result = resp.data ;
-            self.$Message.success(result.message);
+            self.$Message.success(result.msg);
             self.reload();
           }).catch((err) => {
             this.$Message.error("转换恢复异常,错误信息:" + err);
@@ -424,7 +424,7 @@
             }
           }).then(function(resp) {
             let result = resp.data ;
-            self.$Message.success(result.message);
+            self.$Message.success(result.msg);
             self.reload();
           }).catch((err) => {
             this.$Message.error("转换暂停异常,错误信息:" + err);
@@ -445,7 +445,7 @@
             }
           }).then(function(resp) {
             let result = resp.data ;
-            self.$Message.success(result.message);
+            self.$Message.success(result.msg);
             self.reload();
           }).catch((err) => {
             this.$Message.error("转换停止异常,错误信息:" + err);
@@ -467,7 +467,7 @@
             }
           }).then(function(resp) {
             let result = resp.data ;
-            self.$Message.success(result.message);
+            self.$Message.success(result.msg);
             self.reload();
           }).catch((err) => {
             this.$Message.error("转换终止异常,错误信息:" + err);

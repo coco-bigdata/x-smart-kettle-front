@@ -6,30 +6,26 @@ import {forEach, hasOneOf, objEqual} from '@/libs/tools'
 
 const {title,useI18n,cookieExpires} = config
 
-export const TOKEN_KEY = 'token'
 
 export const THIRD_TOKEN_KEY = 'thirdToken'
 
 
 export const setToken = (token) => {
-  Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 1 })
+  Cookies.set(config.TOKEN_KEY, token)
 }
 
+
+export const removeToken = () => {
+  Cookies.remove(config.TOKEN_KEY)
+}
+
+
 export const getToken = () => {
-  const token = Cookies.get(TOKEN_KEY)
+  const token = Cookies.get(config.TOKEN_KEY)
   if (token) return token
   else return false
 }
 
-// export const setToken = (key,token) => {
-//   sessionStorage.setItem(key, token)
-// }
-//
-// export const getToken = (key) => {
-//   const token = sessionStorage.getItem(key)
-//   if (token) return token
-//   else return false
-// }
 
 export const hasChild = (item) => {
   return item.children && item.children.length !== 0
@@ -419,5 +415,13 @@ export const setTitle = (routeItem, vm) => {
   const pageTitle = showTitle(handledRoute, vm)
   const resTitle = pageTitle ? `${title} - ${pageTitle}` : title
   window.document.title = resTitle
+}
+
+
+export const ERROR_CODE=  {
+  '401': '会话过期或认证失败，无法访问系统资源!',
+  '403': '当前操作没有权限',
+  '404': '访问资源不存在',
+  'default': '系统未知错误，请反馈给管理员'
 }
 

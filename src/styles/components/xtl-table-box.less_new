@@ -1,27 +1,27 @@
 
 .xtl-table-box {
     .pt-box {
-      background: linear-gradient(45deg, #020031 0, #275A7C 10%);
+        background: #FFFFFF;
         .pt-icon {
             color: @primary-color;
         }
 
         .pt-title {
-            color: #fff;
+            color: #333333;
         }
 
         .pt-body {
             .upload-img-list-box {
                 border: 1px solid #e0e0e0;
-              background: linear-gradient(45deg, #020031 0, #275A7C 10%);
+                background: #f8f8f8;
             }
 
             .upload-file-box {
                 border: 1px solid #e0e0e0;
-              background: linear-gradient(45deg, #020031 0, #275A7C 10%);
+                background: #f8f8f8;
 
                 .upload-file-list {
-                  background: linear-gradient(45deg, #020031 0, #275A7C 10%);
+                    background: #FFFFFF;
 
                     .size {
                         color: #999999;

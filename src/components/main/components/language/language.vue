@@ -49,3 +49,10 @@ export default {
   }
 }
 </script>
+
+<style>
+
+  .ivu-dropdown-rel  a {
+    color: wheat !important;
+  }
+</style>
