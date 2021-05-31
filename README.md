@@ -307,7 +307,7 @@
     如下图所示:
 ![资源库](https://gitee.com/yaukie/x-smart-kettle-server/raw/master/folder/文件库_1.png)
 
-       SFTP/FTPS/FTP的配置情况如下图所示,可以通过配置远程机器,获取到远程的资源库目录信息
+    SFTP/FTPS/FTP的配置情况如下图所示,可以通过配置远程机器,获取到远程的资源库目录信息
 ![资源库](https://gitee.com/yaukie/x-smart-kettle-server/raw/master/folder/文件库_2.png)
 
 -  数据库资源库
@@ -404,88 +404,138 @@
           内容不要更改，因为里面配置的是我本人的阿里云仓库地址，密码不会再改变，如果有变化，会在网站统一通知，届时，
           重新下载即可 ，仓库环境配置好之后，静静等待jar下载吧，等下载完毕，要去仓库检查一下是否有如下几个jar：
 ```xml
-          x1-simple-job-1.0.0-SNAPSHOT.jar
-          x-kettle-core-1.0.0-SNAPSHOT.jar
-          x-common-base-1.0.0-SNAPSHOT.jar
-          x-common-pro-1.0.0-SNAPSHOT.jar
+          x1-simple-job-2021.4.jar
+          x-kettle-core-2021.4.jar
+          x-common-base-2021.5.jar
+          x-common-pro-2021.5.jar
+          x-common-auth-2021.5.jar
 ```
    如果本地仓库有如上几个jar，那么恭喜您，下载成功，接下来开始进入到步骤三：
  - 步骤三
         开始配置一下应用的yml文件，文件内容如下：
  ```xml
  #配置服务器
-         server:
-           port: ${XTL_APP_SERVER_PORT:9876}
-           servlet:
-             context-path: ${XTL_APP_SERVER_PATH:/xtl-server}
-           #配置数据源
-         spring:
-           redis:
-             enabled: ${XTL_REDIS_ENABLED:false}
-             host: ${XTL_REDIS_HOST:127.0.0.1}
-             port: ${XTL_REDIS_PORT:6379}
-             password: ${XTL_REDIS_PASS:root}
-             jedis:
-               pool:
-                 max-active: 8
-                 max-wait: -1
-                 max-idle: 500
-                 min-idle: 0
-             lettuce:
-               shutdown-timeout: 0
-           application:
-             name: ${XTL_APP_NAME:xtl-app} #应用服务名称
-           datasource:
-             type: com.alibaba.druid.pool.DruidDataSource
-             driver-class-name: com.mysql.jdbc.Driver
-             #系统数据库访问地址【必填项】
-             url: ${XTL_APP_DATASOURCE_URL:jdbc:mysql://localhost:3306/xtl?useUniCode=true&characterEncoding=UTF-8}
-             #系统数据库用户名【必填项】
-             username: ${XTL_APP_DATASOURCE_USERNAME:root}
-             #系统数据库密码【必填项】
-             password: ${XTL_APP_DATASOURCE_PASS:root}
-             # 关闭sharding-jdbc 必须为false
-           shardingsphere:
-             enabled: false
-         kettle:
-           scheduler:
-             #是否开启定时调度，默认为fals，则系统启动不会自动执行定时
-             enabled: ${XTL_KETTLE_SCHEDULER:false}  #kettle定时调度启用为true,应用启动之后,自动将任务加入到定时器执行,设置为false则需要手动触发定时任务
-           log:
-             file:
-               #日志物理路径【必填项】
-               path: ${XTL_KETTLE_LOG_FILE_PATH:/xtl/kettle/logs} # 这个地方建议一定要配置一个存放目录,方便后期下载,查看历史执行记录,如果为"",则不会产生日志到服务器
-               size: ${XTL_KETTLE_LOG_FILE_SIZE:10} # 控制日志文件的大小,默认是10M,超过10M则截断请求
-           repo:
-             # 自定义数据库资源库 使用之前必须先定义资源库【必填项】
-             name: ${XTL_KETTLE_REPO_NAME:临时资源库} # 资源库名称【必填项】
-             hostName: ${XTL_KETTLE_DB_HOST:localhost} # 数据库连接地址【必填项】
-             dbPort: ${XTL_KETTLE_DB_PORT:3306} # 数据库端口 资源库目前仅支持MySQL【必填项】
-             dbName: ${XTL_KETTLE_DB_NAME:etl} # 数据库实例名【必填项】
-             userName: ${XTL_KETTLE_DB_USERNAME:root} #数据库用户名【必填项】
-             passWord: ${XTL_KETTLE_DB_PASS:root} # 数据库密码【必填项】
-             repoLoginName: ${XTL_KETTLE_REPO_LOGINNAME:admin} #资源库登录账户 默认admin【必填项】
-             repoLoginPass: ${XTL_KETTLE_REPO_LOGINPASS:admin} #资源库登录密码 默认admin【必填项】
-             # 该线程池会优先充满至最大的线程数（JDK默认优先将任务提交到队列，队列满了再充满至最大的线程数）
-           pool:
-             # 线程池前缀
-             namePrefix: ${XTL_THREAD_POOL_PREFIX:kettleThreadPool}
-             # 核心线程数
-             coreThreads: ${XTL_THREAD_POOL_CORE:20}
-             # 最大的线程数
-             maxThreads: ${XTL_THREAD_POOL_MAX:50}
-             # 队列容量
-             queueCapacity: ${XTL_THREAD_POOL_QUEUE_CAPACITY:100}
-             # 5分钟空闲则释放
-             keepAliveTimeMin: ${XTL_THREAD_POOL_KEEPALIVE:5}
-         logging:
-           #系统日志存放路径
-           path: ${XTL_APP_LOG_PATH:/maven/xtl-web-server/logs}
-           level:
-             root: ${XTL_APP_LOG_LEVEL:info}
- ```
+          #配置服务器
+          server:
+            port: ${XTL_APP_SERVER_PORT:9876}
+            servlet:
+              context-path: ${XTL_APP_SERVER_PATH:/xtl-server}
+            #配置数据源
+          spring:
+            redis:
+              # 默认不开启 则使用内置Map 作为缓存使用
+              enabled: ${XTL_REDIS_ENABLED:false} # redis缓存开关【如果有redis建议开启,提高性能】
+              host: ${XTL_REDIS_HOST:127.0.0.1}
+              port: ${XTL_REDIS_PORT:6379}
+              password: ${XTL_REDIS_PASS:root}
+              jedis:
+                pool:
+                  max-active: 8
+                  max-wait: -1
+                  max-idle: 500
+                  min-idle: 0
+              lettuce:
+                shutdown-timeout: 0
+            application:
+              name: ${XTL_APP_NAME:xtl-app} # 应用名称【使用默认就行】
+            datasource:
+              druid:
+                # 主库数据源
+                master:
+                  #系统数据库访问地址【必填项】
+                  url: ${XTL_APP_DATASOURCE_URL:jdbc:mysql://localhost:3306/xtl?useUniCode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8}
+                  #系统数据库用户名【必填项】
+                  username: ${XTL_APP_DATASOURCE_USERNAME:root}
+                  #系统数据库密码【必填项】
+                  password: ${XTL_APP_DATASOURCE_PASS:root}
+                # 从库数据源
+                slave:
+                  # 从数据源开关/默认关闭
+                  enabled: false
+                  url: jdbc:mysql://localhost:3306/test_01?useUniCode=true
+                  username: root
+                  password: root
+              # 关闭sharding-jdbc 必须为false
+            shardingsphere:
+              enabled: false
+          # 设置时区
+            jackson:
+              date-format: yyyy-MM-dd HH:mm:ss
+              time-zone: GMT+8
 
-   配置注释写的很清楚了，这里不再解释，如有不懂的地方，请留言
+          kettle:
+            scheduler:
+              #是否开启定时调度，默认为fals，则系统启动不会自动执行定时
+              enabled: ${XTL_KETTLE_SCHEDULER:false}  #kettle定时调度启用为true,应用启动之后,自动将任务加入到定时器执行,设置为false则需要手动触发定时任务
+            log:
+              file:
+                #日志物理路径【必填项】
+                path: ${XTL_KETTLE_LOG_FILE_PATH:/xtl/kettle/logs} # 这个地方建议一定要配置一个存放目录,方便后期下载,查看历史执行记录,如果为"",则不会产生日志到服务器
+                size: ${XTL_KETTLE_LOG_FILE_SIZE:10} # 控制日志文件的大小,默认是10M,超过10M则截断请求
+            repo:
+              # 自定义数据库资源库 使用之前必须先定义资源库【必填项】
+              name: ${XTL_KETTLE_REPO_NAME:临时资源库} # 资源库名称【必填项】
+              hostName: ${XTL_KETTLE_DB_HOST:localhost} # 数据库连接地址【必填项】
+              dbPort: ${XTL_KETTLE_DB_PORT:3306} # 数据库端口 资源库目前仅支持MySQL【必填项】
+              dbName: ${XTL_KETTLE_DB_NAME:etl} # 数据库实例名【必填项】
+              userName: ${XTL_KETTLE_DB_USERNAME:root} #数据库用户名【必填项】
+              passWord: ${XTL_KETTLE_DB_PASS:root} # 数据库密码【必填项】
+              repoLoginName: ${XTL_KETTLE_REPO_LOGINNAME:admin} #资源库登录账户 默认admin【必填项】
+              repoLoginPass: ${XTL_KETTLE_REPO_LOGINPASS:admin} #资源库登录密码 默认admin【必填项】
+              # 该线程池会优先充满至最大的线程数（JDK默认优先将任务提交到队列，队列满了再充满至最大的线程数）
+
+            pool:
+              # 线程池前缀
+              namePrefix: ${XTL_THREAD_POOL_PREFIX:kettleThreadPool}
+              # 核心线程数
+              coreThreads: ${XTL_THREAD_POOL_CORE:20}
+              # 最大的线程数
+              maxThreads: ${XTL_THREAD_POOL_MAX:50}
+              # 队列容量
+              queueCapacity: ${XTL_THREAD_POOL_QUEUE_CAPACITY:100}
+              # 5分钟空闲则释放
+              keepAliveTimeMin: ${XTL_THREAD_POOL_KEEPALIVE:5}
+
+          # Swagger配置
+          swagger:
+            # 是否开启swagger
+            enabled: true
+            # 请求前缀
+            pathMapping: /
+            #当前系统版本号
+            version: V2021.5
+
+          # 系统验证配置
+          yaukie:
+            auth:
+              enabled: true #  系统开启权限认证模块【使用默认就行】
+              encoder:
+                type: md5 # 使用MD5加密方式,如果不设置,则使用强散列函数【使用默认就行】
+              # 是否开启权限认证模块
+              # 如果开启登录验证模块,此配置有效
+            token:
+              # 令牌自定义标识
+              header: Authorization # TOKEN 头【使用默认就行】
+              # 令牌密钥
+              secret: yuenbin@inspur.com&yaukie@163.com # TOKEN加密使用的秘钥【使用默认就行】
+              # 令牌有效期（默认10分钟） 如果不配置 按照10分钟过期
+              expire: 10 # 令牌TOKEN过期时间,默认十分钟【使用默认就行】
+              # 令牌刷新间隔 1 分钟
+              refresh: 1 # 零头TOKEN刷新间隔默认1分钟【使用默认就行】
+
+          logging:
+            #系统日志存放路径
+            path: ${XTL_APP_LOG_PATH:/maven/xtl-web-server/logs}
+            level:
+              org.yaukie.frame.autocode.dao.mapper: debug
+              root: ${XTL_APP_LOG_LEVEL:info}
+              #扫描mapper配置,统一放到classpath目录下
+          mybatis:
+            mapper-locations: classpath*:mapper/**/*Mapper.xml
+            configuration:
+              log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+ ```
+  配置注释写的很清楚了，这里不再解释，如有不懂的地方，请留言
 
  - 步骤四
         步骤三完成之后，需要在本地建立一个应用数据库，数据库脚本详见：doc->database->Mysql，包括建表语句及初始化数据
@@ -544,8 +594,6 @@
         ```
         启动应用，并在浏览器访问：http://ip:port/xtl-server/swagger-ui.html ,出现如下截图，那么恭喜您启动成功：
         ![启动截图](https://gitee.com/yaukie/x-smart-kettle-server/raw/master/folder/start.png)
-        ![启动截图](http://github.com/yaukie/x-smart-kettle-server/raw/master/folder/start.png)
-        ![启动截图](https://gitee.com/yaukie/x-smart-kettle-server/raw/master/folder/start.png)
 
 - 下载 x-smart-kettle-font 前端应用 ，下载地址详见上述简介
      - 步骤一
@@ -578,8 +626,6 @@
 ```
    然后执行 `npm run dev` 本地启动应用，出现如下控制台打印的信息，则恭喜您前端也启动成功！
            ![启动截图](https://gitee.com/yaukie/x-smart-kettle-server/raw/master/folder/start2.png)
-           ![启动截图](https://gitee.com/yaukie/x-smart-kettle-server/raw/master/folder/start2.png)
-           ![启动截图](http://github.com/yaukie/x-smart-kettle-server/raw/master/folder/start2.png)
 
 ### 2. 在线部署(懒人模式)
     懒人模式使用方式针对那些不想下载源码，也不想自己搭建本地环境、下载依赖，说白了就是想通过傻瓜式的方式使用本系统。
@@ -587,7 +633,7 @@
     懒人教程请点击：
     -> https://my.oschina.net/yaukie/blog/4993603
 
-### 3. 云端部署(docker部署)
+### 3. 云端部署(docker部署)--待完善
   本平台采用前后端分离,前后端都支持docker 远程镜像部署、拉取，支持云部署，读者可根据需要拉取镜像，完成本地化部署
     - Smart Kettle 前端
        前端镜像地址为：registry.cn-qingdao.aliyuncs.com/yaukie/kettle-admin:2021.4
@@ -611,11 +657,17 @@
         Smart Kettle 后端镜像拉取、部署方式跟前端类似，具体步骤不再赘述
         需要执行的docker 拉取镜像的命令为：
         docker pull registry.cn-qingdao.aliyuncs.com/yaukie/smart-kettle:2021.4
-        启动之后，在浏览器访问：http://ip/xtl-server/swagger-ui.html  出现如下图:
+        启动之后，在浏览器访问：http://ip/xtl-server/help/swagger  出现如下图:
         ![前端镜像](http://gitee.com/yaukie/x-smart-kettle-server/raw/master/folder/h_2.png)
         恭喜你,后端也执行成功!
+        如果使用swagger执行接口,需要在请求头加上TOKEN验证 ,如下图所示:
+        ![前端镜像](http://gitee.com/yaukie/x-smart-kettle-server/raw/master/folder/h_3.png)
+         首先需要获取验证码,如下图所示:
+        ![前端镜像](http://gitee.com/yaukie/x-smart-kettle-server/raw/master/folder/h_4.png)
+         然后通过青丘/sso/login接口,将上述验证码作为参数,获取登录成功后的token,填入Authorization头
+         ![前端镜像](http://gitee.com/yaukie/x-smart-kettle-server/raw/master/folder/h_5.png)
 
-## 后续计划
+ ## 后续计划
        Smart Kettle 目前尚未完全实现Kettle web 端的编排，因此使用此系统还需要借助Kettle 客户端完成复杂作业及转换
        的设计、测试，但提供了友好、优美、简洁的前端监控能力，kettle 组件的web端流程编排是以后本系统前进的方向，努力
        实现的终极目标，也期待读者能持续关注升级、更新。
@@ -642,7 +694,9 @@
  ## 使用情况
 当前该调度监控平台于2021年初正式上线，截止最新统计时间为止，Smart Kettle已接入的公司包括不限于：
 
-     - 1、xx软件股份有限公司
+     - 1、xx软件股份有限公司 http://xx.com.cn
+	 - 2、北京浪潮天元集团 https://lcjtgs.dyq.cn/
+	 - 3、南京竹石信息科技有限公司 http://www.mymedunion.com/
 
    > 更多接入的公司，欢迎在 [登记地址](https://gitee.com/yaukie/x-smart-kettle-server/issues/I39TQV) 登记，登记仅仅为了产品推广。
 
