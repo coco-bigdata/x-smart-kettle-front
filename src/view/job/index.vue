@@ -573,7 +573,9 @@
         });
       },
       doDelOp(row) {
-          let self = this
+        let self = this
+
+
         let status = row.targetResult
           if(status == '10' || status =='20'){
             this.$Message.warning({content:"作业处于运行状态,禁止此操作,请先手动从队列中移除任务!"})

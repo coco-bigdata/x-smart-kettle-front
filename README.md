@@ -720,4 +720,4 @@ No matter how much the donation amount is enough to express your thought, thank 
         佛祖保佑捐赠这些人写程序永无bug，工资翻倍，迎娶白富美，走上人生巅峰！
 
 ![支付宝](https://gitee.com/yaukie/x-smart-kettle-server/raw/master/folder/wechat.jpg)
-       
+

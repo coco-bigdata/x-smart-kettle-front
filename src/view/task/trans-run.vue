@@ -30,6 +30,8 @@
    import config from '@/config/config';
   import InputCron from '@/components/cron/input-cron';
    import util from '@/libs/util.js';
+   import {getNewTagList, routeEqual} from '@/libs/platformUtil'
+   import { mapMutations } from 'vuex'
   export default {
     name: "trans-modal",
     components: {
@@ -77,6 +79,9 @@
     },
 
     computed: {
+      list: function (){
+        return this.$store.state.app.tagNavList
+      },
       transId: function () {
         return this.$route.query.transId
       },
@@ -86,6 +91,10 @@
     },
 
     methods: {
+      ...mapMutations([
+        'setTagNavList',
+        'closeTag'
+      ]),
       initData(){
         let self = this
         util.ajax.get(config.xtlServerContext+"/op/xquartz/get",{
@@ -122,11 +131,13 @@
                   self.loading=false
                   self.$Modal.confirm({
                     title: '操作成功提示',
-                    content: '<p>转换已提交至任务池,详情请移步日志管理!</p>',
-                    okText: '移步日志管理',
+                    content: '<p>转换已提交至任务池,详情请移步调度日志!</p>',
+                    okText: '移步调度日志',
                     cancelText: '取消',
                     onOk: () => {
-                      this.$router.push({name:'日志管理'})
+                      this.$router.push({name:'调度日志'})
+                      // 关闭作业定时窗口
+                      this.handleCloseTag();
                     },
                     onCancel: () => {
                       self.cancel();
@@ -153,11 +164,13 @@
                   self.loading=false
                   self.$Modal.confirm({
                     title: '操作成功提示',
-                    content: '<p>转换已提交到定时任务中,请移步日志管理查看详情!</p>',
-                    okText: '移步日志管理',
+                    content: '<p>转换已提交到定时任务中,请移步调度日志查看详情!</p>',
+                    okText: '移步调度日志',
                     cancelText: '取消',
                     onOk: () => {
-                      this.$router.push({name:'日志管理'})
+                      this.$router.push({name:'调度日志'})
+                      // 关闭作业定时窗口
+                      this.handleCloseTag();
                     },
                     onCancel: () => {
                       self.cancel();
@@ -172,6 +185,8 @@
                     cancelText: '取消',
                     onOk: () => {
                       this.$router.push({name:'定时管理'})
+                      // 关闭作业定时窗口
+                      this.handleCloseTag();
                     },
                     onCancel: () => {
                       self.cancel();
@@ -187,10 +202,19 @@
           }
         })
 
-
       },
       cancel(){
-        this.$router.go(-1);
+        // 关闭作业定时窗口
+        this.handleCloseTag();
+        this.$router.push({name:'转换调度'})
+      },
+      handleCloseTag() {
+        let route ={};
+        let tag = this.list.filter(item => {
+          return item.name==='转换定时'
+        })
+        route = tag[0] ? tag[0] : null
+        this.closeTag(route)
       },
         selectChange() {
         let self = this

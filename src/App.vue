@@ -27,7 +27,7 @@ export default {
     ...mapState(['openFlag']),
   },
   mounted () {
-    setWaterMark('SmartKettle', 'https://my.oschina.net/yaukie');
+    setWaterMark('yuenbin', 'https://my.oschina.net/yaukie');
   },
   destroyed() {
     removeWatermark();

@@ -2,29 +2,29 @@
   <div>
     <Row  >
       <i-col  span="12">
-<!--         <Divider orientation="left">-->
-           <span><Icon @click="refresh" type="md-refresh-circle" style="cursor: pointer;font-size: 24px;color: #41d0ff" /></span>&nbsp;
-          <span style="font-size: 20px;font-weight: bold;color:#ccc;padding: 10px">实例运行统计</span>
-<!--        </Divider>-->
+        <!--         <Divider orientation="left">-->
+        <span><Icon @click="refresh" type="md-refresh-circle" style="cursor: pointer;font-size: 24px;color: #41d0ff" /></span>&nbsp;
+        <span style="font-size: 20px;font-weight: bold;color:#ccc;padding: 10px">实例运行统计</span>
+        <!--        </Divider>-->
       </i-col>
-    <i-col   span="8" offset="4">
-<!--      <Divider orientation="right">-->
+      <i-col   span="8" offset="4">
+        <!--      <Divider orientation="right">-->
         <span style="color:#ccc"> 统计截止日期:&nbsp;{{initTime}}</span>&nbsp;
-      <DatePicker @on-change="dateChange"  type="daterange" format="yyyy-MM-dd"
-                  placeholder="选择日期" :value = "iniDate"
-                  style="width: 200px"></DatePicker>
-<!--      </Divider>-->
-    </i-col>
+        <DatePicker @on-change="dateChange"  type="daterange" format="yyyy-MM-dd"
+                    placeholder="选择日期" :value = "iniDate"
+                    style="width: 200px"></DatePicker>
+        <!--      </Divider>-->
+      </i-col>
     </Row>
     <Row >
-         <i-col  span="5"><span style="font-size: 20px;font-weight: bold;color: #ffffff">运行详情</span>
-           &nbsp; &nbsp; &nbsp;<Icon type="ios-images" style="color:#41d0ff" />&nbsp;<span>实例总数</span>&nbsp;
-           <span style="font-size: 20px;color: #ccc">{{totalInstances}}</span></i-col>
-     </Row>
+      <i-col  span="5"><span style="font-size: 20px;font-weight: bold;color: #ffffff">运行详情</span>
+        &nbsp; &nbsp; &nbsp;<Icon type="ios-images" style="color:#41d0ff" />&nbsp;<span>实例总数</span>&nbsp;
+        <span style="font-size: 20px;color: #ccc">{{totalInstances}}</span></i-col>
+    </Row>
     <br/>
     <Row  :gutter="22" >
       <i-col  :lg="6"v-for="(infor, i) in inforCardData" :key="`infor-${i}`"
-             style="height: 125px;padding: 10px;">
+              style="height: 125px;padding: 10px;">
         <infor-card shadow :color="infor.color" :title="infor.title" :pieData="infor.count" :count2="infor.count2" :icon-size="36">
           <p><icon :type="infor.icon" :color="infor.color" :size="18"/>&nbsp;
             <span style="font-size: 18px;color: #cccc;font-weight: bold">{{ infor.title }}</span></p>
@@ -35,8 +35,8 @@
     </Row>
     <br/>
     <Row >
-    <i-col  span="4"><span style="font-size: 20px;font-weight: bold;color: #ffffff">实例详情</span> </i-col>
-  </Row>
+      <i-col  span="4"><span style="font-size: 20px;font-weight: bold;color: #ffffff">实例详情</span> </i-col>
+    </Row>
     <Row :gutter="20" style="margin-top: 10px;">
       <i-col span="24">
         <Card shadow>
@@ -44,7 +44,7 @@
         </Card>
       </i-col>
 
-     </Row>
+    </Row>
     <br/>
 
     <Row >
@@ -64,9 +64,9 @@
     </Row>
     <Row :gutter="24" >
       <i-col span="24">
-      <Card shadow>
-        <example style="height: 310px;" :x-example-data="xExampleData" :series-example-data="seriesExampleData"/>
-      </Card>
+        <Card shadow>
+          <example style="height: 310px;" :x-example-data="xExampleData" :series-example-data="seriesExampleData"/>
+        </Card>
       </i-col>
     </Row>
     <br/>
@@ -89,7 +89,7 @@
             v-bind="tableProps1"
           >
           </xtl-table>
-          </Card>
+        </Card>
       </i-col>
       <i-col span="12"  >
         <Card shadow>
@@ -104,7 +104,7 @@
             v-bind="tableProps2"
           >
           </xtl-table>
-          </Card>
+        </Card>
       </i-col>
     </Row>
   </div>
@@ -118,7 +118,7 @@
   import CountTo from '_c/count-to'
   import { ChartPie,ChartBar } from '_c/charts'
   import Example from './example.vue'
-   import util from '@/libs/util'
+  import util from '@/libs/util'
   import config from '@/config/config'
   import tableProgress from '@/view/homepage/common/table-progress'
   export default {
@@ -165,7 +165,7 @@
         searchForm: {
           createDateEnd: new Date().Format('yyyy-MM-dd'),
           createDateBegin: util.formatDate(util.getBeforeOrNxtDay(-9)),
-         },
+        },
         lineCardData: [
           { title: '已运行实例总数', icon: 'md-globe',rate:0,count: 0,count2:0, color: '#5791ff' },
           { title: '运行成功次数', icon: 'md-checkmark-circle-outline', rate:0,count: 0,count2:0,  color: '#1cf003' },
@@ -176,7 +176,7 @@
           { title: '运行失败', icon: 'ios-close-circle', rate:0,count: 0,count2:0,  color: '#be1f0e' },
           { title: '运行中', icon: 'ios-code-working', rate:0,count: 0,count2:0, color: '#5791ff' },
           { title: '未运行', icon: 'ios-stopwatch', rate:0,count: 0,count2:0, color: '#ed7ced' }
-         ],
+        ],
 
 
       }
@@ -191,7 +191,7 @@
             width: "80",
             render: (h, params) => {
               let index = params.row.rowIndex
-               if(index =='1'){
+              if(index =='1'){
                 return h('div', [
                   h('Icon', {
                     props: {
@@ -294,7 +294,7 @@
         let self = this;
         columns.push({
             title: "排名",
-             align: "center",
+            align: "center",
             width: "80",
             render: (h, params) => {
               let index = params.row.rowIndex
@@ -342,7 +342,7 @@
           {
             title: "实例名称",
             align: "center",
-             width: "150",
+            width: "150",
             sortable: true,
             resizable: true,
             // className: 'demo-table-info-column',
@@ -396,7 +396,7 @@
         return columns;
       }
       ,
-    initTime(){
+      initTime(){
         return new Date().getHours()+":"+new Date().getMinutes()+":"+new Date().getSeconds()
       }
     },
@@ -406,7 +406,7 @@
         desc:'使用调度大盘，一定要先开启作业或转换的监控开关哦<br/>为避免性能问题，监控已默认关闭',
         duration: 0
       });
-     this.initData() ;
+      this.initData() ;
       this.setActive(this.index);
 
     },
@@ -476,9 +476,9 @@
           }
         }).then(function(resp) {
           let data = resp.data.data ;
-           self.jobSeriesData = data.jobSeriesData
-           self.transSeriesData = data.transSeriesData
-           // 销毁 loading 消息
+          self.jobSeriesData = data.jobSeriesData
+          self.transSeriesData = data.transSeriesData
+          // 销毁 loading 消息
           setTimeout(msg1, 0);
         }).catch((err) => {
           // 销毁 loading 消息
@@ -567,11 +567,11 @@
 
   .ivu-table .demo-table-info-row1 td{
     /*background-color: rgba(255, 38, 248, 0.4);*/
-   }
+  }
 
   .ivu-table .demo-table-error-row2 td{
     /*background-color: rgba(255, 0, 0, 0.4);*/
-   }
+  }
 
   .ivu-table .demo-table-error-row3 td{
     /*background-color: rgba(255, 138, 36, 0.4);*/

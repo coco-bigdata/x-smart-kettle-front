@@ -87,7 +87,7 @@ module.exports = {
   devServer: {
     proxy: {
       "/xtl-server": {
-         target: "http://localhost:9876/xtl-server/",
+         target: "http://101.132.24.211/xtl-server/",
         pathRewrite: { "^/xtl-server": "" },
         changeOrigin: true
      }

@@ -5,8 +5,10 @@
 <script>
   import echarts from 'echarts'
   import { on, off } from '@/libs/tools'
+  import tdTheme from './theme.json'
+  echarts.registerTheme('tdTheme', tdTheme)
   export default {
-    name: 'ChartBar2',
+    name: 'ChartBar',
     props:{
       jobSeriesData: {
         type:Array,
@@ -92,7 +94,7 @@
         }
 
         this.$nextTick(() => {
-          this.dom = echarts.init(this.$refs.dom)
+          this.dom = echarts.init(this.$refs.dom,'tdTheme')
           this.dom.setOption(option)
           on(window, 'resize', this.resize)
         })

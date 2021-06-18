@@ -225,6 +225,7 @@
         }
       },
       doBatchDel(row) {
+
         let self = this;
         let idSelectedArr = self.idSelectedArr;
         if (idSelectedArr.length === 0) {
